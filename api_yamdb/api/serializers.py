@@ -17,10 +17,29 @@ class GenreSerializer(serializers.ModelSerializer):
         model = Genre
 
 
+class GenreSlug(serializers.SlugRelatedField):
+    def to_representation(self, value):
+        serializer = GenreSerializer(value)
+        return serializer.data
+
+
+class CategorySlug(serializers.SlugRelatedField):
+    def to_representation(self, value):
+        serializer = CategorySerializer(value)
+        return serializer.data
+
+
 class TitleSerializer(serializers.ModelSerializer):
     rating = serializers.SerializerMethodField()
-    genre = GenreSerializer(read_only=True, many=True)
-    category = CategorySerializer(read_only=True)
+    genre = GenreSlug(
+        many=True,
+        slug_field="slug",
+        queryset=Genre.objects.all(),
+    )
+    category = CategorySlug(
+        slug_field="slug",
+        queryset=Category.objects.all(),
+    )
 
     class Meta:
         fields = (
