@@ -6,19 +6,69 @@ class User(AbstractUser):
     ADMIN = "admin"
     MODERATOR = "moderator"
     USER = "user"
+
     ROLES = [
         (ADMIN, "Администратор"),
         (MODERATOR, "Модератор"),
         (USER, "Пользователь"),
     ]
+
     role = models.CharField(
-        max_length=10,
+        max_length=16,
         choices=ROLES,
         default=USER,
+        verbose_name='Роль'
     )
-    email = models.EmailField(max_length=254, unique=True)
-    first_name = models.CharField(max_length=150, blank=True)
-    bio = models.TextField()
+    email = models.EmailField(
+        max_length=254,
+        unique=True,
+        verbose_name='Электронная почта'
+    )
+    first_name = models.CharField(
+        max_length=40,
+        blank=True,
+        verbose_name='Имя'
+    )
+    bio = models.TextField(
+        blank=True,
+        verbose_name='Описание'
+    )
+    confirmation_code = models.CharField(
+        max_length=50,
+        blank=True,
+        verbose_name='Код для авторизации'
+    )
+
+    class Meta:
+        verbose_name = "Пользователь"
+        verbose_name_plural = "Пользователи"
+        constraints = [
+            models.UniqueConstraint(
+                fields=['username', 'email'],
+                name='unique_username_email'
+            )
+        ]
+
+    @property
+    def is_user(self):
+        if self.role == self.USER:
+            return True
+        else:
+            return False
+
+    @property
+    def is_moderator(self):
+        if self.role == self.MODERATOR:
+            return True
+        else:
+            return False
+
+    @property
+    def is_admin(self):
+        if self.role == self.ADMIN:
+            return True
+        else:
+            return False
 
 
 class Genre(models.Model):
