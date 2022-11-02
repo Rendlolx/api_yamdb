@@ -39,11 +39,11 @@ python manage.py runserver
 YaMDB отправляет письмо с кодом подтверждения (confirmation_code) на адрес email.
 Пользователь отправляет POST-запрос с параметрами username и confirmation_code на эндпоинт /api/v1/auth/token/, в ответе на запрос ему приходит token (JWT-токен).
 При желании пользователь отправляет PATCH-запрос на эндпоинт /api/v1/users/me/ и заполняет поля в своём профайле.
-Передавайте в Headers-Authorization: токен для запросов к API, например:
+Передавайте в Headers-Authorization токен для запросов к API, например:
 ```sh
 http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/ (GET, POST, PUT, PATCH, DELETE)
 ```
-для работы с отзывами
+для работы с отзывами.
 Более подробно с возможностями API можно ознакомиться в документации по адресу: 
 ```sh
 http://127.0.0.1:8000/redoc/
