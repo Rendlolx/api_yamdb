@@ -23,10 +23,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "djoser",
     "django_filters",
     "api",
     "reviews",
-    "user",
 ]
 
 MIDDLEWARE = [
@@ -60,7 +60,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "api_yamdb.wsgi.application"
 
-
+AUTH_USER_MODEL = "reviews.User"
 # Database
 
 DATABASES = {

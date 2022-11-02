@@ -1,4 +1,24 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
+
+
+class User(AbstractUser):
+    ADMIN = "admin"
+    MODERATOR = "moderator"
+    USER = "user"
+    ROLES = [
+        (ADMIN, "Администратор"),
+        (MODERATOR, "Модератор"),
+        (USER, "Пользователь"),
+    ]
+    role = models.CharField(
+        max_length=10,
+        choices=ROLES,
+        default=USER,
+    )
+    email = models.EmailField(max_length=254, unique=True)
+    first_name = models.CharField(max_length=150, blank=True)
+    bio = models.TextField()
 
 
 class Genre(models.Model):

@@ -5,11 +5,15 @@ from django.apps import apps
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.shortcuts import get_object_or_404
-from reviews.models import (  # Comment,; Review,; User,
+
+from reviews.models import (  # isort:skip
     Category,
     Genre,
     GenreTitle,
     Title,
+    User,
+    # Comment,
+    # Review,
 )
 
 
@@ -109,7 +113,7 @@ class Command(BaseCommand):
             GenreTitle: import_genre_title,
             #            Review: import_review,
             Title: import_title,
-            #            User: import_user,
+            User: import_user,
         }
         for model, func in models_func.items():
             if self.model is model:
