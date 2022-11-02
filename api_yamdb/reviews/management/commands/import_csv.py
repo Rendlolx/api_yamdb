@@ -12,8 +12,8 @@ from reviews.models import (  # isort:skip
     GenreTitle,
     Title,
     User,
-    # Comment,
-    # Review,
+    Comment,
+    Review,
 )
 
 
@@ -108,10 +108,10 @@ class Command(BaseCommand):
         next(reader, None)
         models_func = {
             Category: import_category,
-            #            Comment: import_comment,
+            Comment: import_comment,
             Genre: import_genre,
             GenreTitle: import_genre_title,
-            #            Review: import_review,
+            Review: import_review,
             Title: import_title,
             User: import_user,
         }

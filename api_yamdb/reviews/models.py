@@ -74,20 +74,48 @@ class GenreTitle(models.Model):
         return f"{self.title} {self.genre}"
 
 
-class Comment(models.Model):
-    text = models.TextField(max_length=1000)
+class Review(models.Model):
+    title = models.ForeignKey(
+        Title,
+        on_delete=models.CASCADE,
+        related_name="reviews",
+    )
+    text = models.TextField()
     author = models.ForeignKey(
         User,
-        on_deleate=models.CASCADE,
-        null=True,
-        pub_date=models.DateTimeField(
-            'Date published',
-            auto_now_add=True,
-        )
+        on_delete=models.CASCADE,
+        related_name="reviews",
     )
+    score = models.PositiveSmallIntegerField()
+    pub_date = models.DateTimeField("Дата публикации", auto_now_add=True)
 
     class Meta:
-        ordering = ('pub_date',)
+        ordering = ["-pub_date"]
+        verbose_name = "Отзыв"
+        verbose_name_plural = "Отзывы"
 
     def __str__(self):
-        return self.text
+        return self.text[:10]
+
+
+class Comment(models.Model):
+    review = models.ForeignKey(
+        Review,
+        on_delete=models.CASCADE,
+        related_name="comments",
+    )
+    text = models.TextField()
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="comments",
+    )
+    pub_date = models.DateTimeField("Дата публикации", auto_now_add=True)
+
+    class Meta:
+        ordering = ["-pub_date"]
+        verbose_name = "Комментарий"
+        verbose_name_plural = "Комментарии"
+
+    def __str__(self):
+        return self.text[:10]
