@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from rest_framework import permissions
 
 
@@ -48,10 +47,3 @@ class IsAuthorModeratorPermission(permissions.BasePermission):
                 or request.user.is_moderator)
                 )
         )
-=======
-class CommentPermission(permissions.BasePermission):
-
-    def has_permision(self, request, view):
-        return (request.method in permissions.SAFE_METHODS or
-                request.user.is_authenticated)
->>>>>>> comment
