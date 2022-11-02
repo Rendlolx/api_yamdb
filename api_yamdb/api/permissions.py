@@ -28,4 +28,3 @@ class CommentPermission(permissions.BasePermission):
         else:
             return (obj.author == request.user or
                     request.user.role in ['admin', 'moderator'])
-
