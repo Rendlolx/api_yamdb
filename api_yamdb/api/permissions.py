@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from rest_framework import permissions
 
 
@@ -12,3 +13,10 @@ class IsAdminOrReadOnly(permissions.BasePermission):
         return (
             request.method in permissions.SAFE_METHODS or request.user.is_admin
         )
+=======
+class CommentPermission(permissions.BasePermission):
+
+    def has_permision(self, request, view):
+        return (request.method in permissions.SAFE_METHODS or
+                request.user.is_authenticated)
+>>>>>>> comment

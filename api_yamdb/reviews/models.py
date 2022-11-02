@@ -72,3 +72,22 @@ class GenreTitle(models.Model):
 
     def __str__(self):
         return f"{self.title} {self.genre}"
+
+
+class Comment(models.Model):
+    text = models.TextField(max_length=1000)
+    author = models.ForeignKey(
+        User,
+        on_deleate=models.CASCADE,
+        null=True,
+        pub_date=models.DateTimeField(
+            'Date published',
+            auto_now_add=True,
+        )
+    )
+
+    class Meta:
+        ordering = ('pub_date',)
+
+    def __str__(self):
+        return self.text
