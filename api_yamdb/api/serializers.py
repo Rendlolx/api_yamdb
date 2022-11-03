@@ -3,19 +3,21 @@ import datetime as dt
 from django.db.models import Avg
 from rest_framework import serializers
 
-from reviews.models import Category, Genre, Title, User # isort:skip
+from reviews.models import Category, Genre, Title, User  # isort:skip
 
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         exclude = ("id",)
         model = Category
+        lookup_field = "slug"
 
 
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         exclude = ("id",)
         model = Genre
+        lookup_field = "slug"
 
 
 class GenreSlug(serializers.SlugRelatedField):
@@ -67,25 +69,27 @@ class TitleSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = User
         fields = (
-            'username', 'email', 'first_name', 'last_name', 'bio', 'role'
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "bio",
+            "role",
         )
 
     def validate(self, data):
-        if data.get('username') == 'me':
-            raise serializers.ValidationError(
-                'Username указан неверно!')
+        if data.get("username") == "me":
+            raise serializers.ValidationError("Username указан неверно!")
         return data
 
 
 class AuthSignUpSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = User
-        fields = ('email', 'username')
+        fields = ("email", "username")
 
 
 class AuthTokenSerializer(serializers.Serializer):

@@ -88,8 +88,8 @@ def import_user(model, reader):
 class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
-            "-fp",
-            "--file_path",
+            "-fn",
+            "--file_name",
             type=str,
             help="Введите название базы - файл.csv",
         )
@@ -99,7 +99,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.file_path = os.path.join(
-            settings.BASE_DIR, "static\data", options["file_path"]
+            settings.BASE_DIR, "static\data", options["file_name"]
         )
         self.name_model = options["model_name"]
         self.model = apps.get_model("reviews", self.name_model)
