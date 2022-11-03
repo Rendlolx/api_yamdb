@@ -3,7 +3,7 @@ import datetime as dt
 from django.db.models import Avg
 from rest_framework import serializers
 
-from reviews.models import Category, Genre, Title  # isort:skip
+from reviews.models import Category, Genre, Title, User # isort:skip
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -64,3 +64,30 @@ class TitleSerializer(serializers.ModelSerializer):
                 "Год создания не может быть из будущего!"
             )
         return value
+
+
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = (
+            'username', 'email', 'first_name', 'last_name', 'bio', 'role'
+        )
+
+    def validate(self, data):
+        if data.get('username') == 'me':
+            raise serializers.ValidationError(
+                'Username указан неверно!')
+        return data
+
+
+class AuthSignUpSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('email', 'username')
+
+
+class AuthTokenSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=150)
+    confirmation_code = serializers.CharField(max_length=50)
