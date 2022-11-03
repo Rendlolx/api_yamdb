@@ -1,24 +1,18 @@
 import django_filters
 from django.shortcuts import get_object_or_404
-from django_filters.rest_framework import (
-    CharFilter,
-    DjangoFilterBackend,
-    FilterSet,
-)
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, mixins, status, viewsets
 from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .permissions import (
-    IsAuthorModeratorPermission,
+from .utils import generate_and_send_confirmation_code_to_email
+
+from .permissions import (  # isort:skip
+    IsAdminOrReadOnly,
     IsStaffAdminPermission,
     IsUserSelfPermission,
 )
-from .utils import generate_and_send_confirmation_code_to_email
-
-from .permissions import IsAdminOrReadOnly  # isort:skip
-
 from .serializers import (  # isort:skip
     CategorySerializer,
     GenreSerializer,

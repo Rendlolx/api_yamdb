@@ -1,7 +1,7 @@
-from api.serializers import TitleSerializer
 from rest_framework import serializers
 
-from reviews.models import Comment, Review
+from api.serializers import TitleSerializer  # isort:skip
+from .models import Comment, Review  # isort:skip
 
 
 class ReviewSerializer(serializers.ModelSerializer):

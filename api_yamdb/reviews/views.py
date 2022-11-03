@@ -2,13 +2,14 @@ from django.shortcuts import get_object_or_404
 from rest_framework import serializers, status, viewsets
 from rest_framework.response import Response
 
-from .models import Comment, Review, Title
-from .serializers import CommentSerializer, ReviewSerializer
+from .models import Comment, Review, Title  # isort:skip
+from .serializers import CommentSerializer, ReviewSerializer  # isort:skip
+from api.permissions import IsAuthorModeratorAdminPermission  # isort:skip
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
-    # permission_classes = []
+    permission_classes = [IsAuthorModeratorAdminPermission]
 
     def get_queryset(self):
         title = get_object_or_404(Title, id=self.kwargs["title_id"])
@@ -29,7 +30,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-    # permission_classes = []
+    permission_classes = [IsAuthorModeratorAdminPermission]
 
     def get_queryset(self):
         review = get_object_or_404(Review, id=self.kwargs["review_id"])
