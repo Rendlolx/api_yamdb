@@ -37,20 +37,3 @@ class IsAuthorModeratorPermission(permissions.BasePermission):
                 and (request.user.is_admin or request.user.is_moderator)
             )
         )
-<<<<<<< HEAD
-
-
-class CommentPermission(permissions.BasePermission):
-
-    def has_permision(self, request, view):
-        return (request.method in permissions.SAFE_METHODS or
-                request.user.is_authenticated)
-
-    def has_object_permission(self, request, view, obj):
-        if request.user.is_anonymous:
-            return request.method == 'GET'
-        else:
-            return (obj.author == request.user or
-                    request.user.role in ['admin', 'moderator'])
-=======
->>>>>>> 21a889ed5db3ee4569f723ffa3280885f5905b43
