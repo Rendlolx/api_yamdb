@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import serializers, status, viewsets
+from rest_framework import permissions, serializers, status, viewsets
 from rest_framework.response import Response
 
 from .models import Comment, Review, Title  # isort:skip
@@ -9,12 +9,14 @@ from api.permissions import IsAuthorModeratorAdminPermission  # isort:skip
 
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthorModeratorAdminPermission]
+    permission_classes = [
+        IsAuthorModeratorAdminPermission,
+        permissions.IsAuthenticatedOrReadOnly
+    ]
 
     def get_queryset(self):
         title = get_object_or_404(Title, id=self.kwargs["title_id"])
-        queryset = Review.objects.filter(title=title)
-        return queryset
+        return Review.objects.filter(title=title)
 
     def perform_create(self, serializer):
         title = get_object_or_404(Title, id=self.kwargs["title_id"])
@@ -30,12 +32,14 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-    permission_classes = [IsAuthorModeratorAdminPermission]
+    permission_classes = [
+        IsAuthorModeratorAdminPermission,
+        permissions.IsAuthenticatedOrReadOnly,
+    ]
 
     def get_queryset(self):
         review = get_object_or_404(Review, id=self.kwargs["review_id"])
-        queryset = Comment.objects.filter(review=review)
-        return queryset
+        return Comment.objects.filter(review=review)
 
     def perform_create(self, serializer):
         review = get_object_or_404(Review, id=self.kwargs["review_id"])
@@ -49,4 +53,4 @@ class CommentViewSet(viewsets.ModelViewSet):
     def perform_update(self, serializer):
         if self.request.user.is_anonymous:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-        serializer.save()
+        return serializer.save()

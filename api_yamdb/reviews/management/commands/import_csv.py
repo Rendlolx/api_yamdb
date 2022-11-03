@@ -99,7 +99,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.file_path = os.path.join(
-            settings.BASE_DIR, "static\data", options["file_name"]
+            settings.BASE_DIR, "static/data", options["file_name"]
         )
         self.name_model = options["model_name"]
         self.model = apps.get_model("reviews", self.name_model)

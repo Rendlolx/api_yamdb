@@ -8,6 +8,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from .utils import generate_and_send_confirmation_code_to_email
 
+from reviews.models import Category, Genre, Title, User  # isort:skip
+
 from .permissions import (  # isort:skip
     IsAdminOrReadOnly,
     IsStaffAdminPermission,
@@ -21,7 +23,6 @@ from .serializers import (  # isort:skip
     AuthSignUpSerializer,
     AuthTokenSerializer,
 )
-from reviews.models import Category, Genre, Title, User  # isort:skip
 
 
 class CategoryViewSet(
