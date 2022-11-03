@@ -109,7 +109,7 @@ def signup_new_user(request):
             generate_and_send_confirmation_code_to_email(username)
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(
-            "Username указан невено!", status=status.HTTP_400_BAD_REQUEST
+            "Username указан неверно!", status=status.HTTP_400_BAD_REQUEST
         )
     user = get_object_or_404(User, username=username)
     serializer = AuthSignUpSerializer(user, data=request.data, partial=True)
