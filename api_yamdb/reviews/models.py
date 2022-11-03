@@ -14,29 +14,17 @@ class User(AbstractUser):
     ]
 
     role = models.CharField(
-        max_length=16,
-        choices=ROLES,
-        default=USER,
-        verbose_name='Роль'
+        max_length=16, choices=ROLES, default=USER, verbose_name="Роль"
     )
     email = models.EmailField(
-        max_length=254,
-        unique=True,
-        verbose_name='Электронная почта'
+        max_length=254, unique=True, verbose_name="Электронная почта"
     )
     first_name = models.CharField(
-        max_length=40,
-        blank=True,
-        verbose_name='Имя'
+        max_length=150, blank=True, verbose_name="Имя"
     )
-    bio = models.TextField(
-        blank=True,
-        verbose_name='Описание'
-    )
+    bio = models.TextField(blank=True, verbose_name="Описание")
     confirmation_code = models.CharField(
-        max_length=50,
-        blank=True,
-        verbose_name='Код для авторизации'
+        max_length=50, blank=True, verbose_name="Код для авторизации"
     )
 
     class Meta:
@@ -44,8 +32,7 @@ class User(AbstractUser):
         verbose_name_plural = "Пользователи"
         constraints = [
             models.UniqueConstraint(
-                fields=['username', 'email'],
-                name='unique_username_email'
+                fields=["username", "email"], name="unique_username_email"
             )
         ]
 
