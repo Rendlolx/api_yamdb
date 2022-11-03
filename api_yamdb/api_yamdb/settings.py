@@ -108,7 +108,7 @@ STATIC_URL = "/static/"
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static/"),)
 
-AUTH_USER_MODEL = 'reviews.User'
+AUTH_USER_MODEL = "reviews.User"
 
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
@@ -126,8 +126,8 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 
-EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
 
-EMAIL_ADMIN = 'Admin@ya.ru'
+EMAIL_ADMIN = "Admin@ya.ru"
