@@ -68,9 +68,12 @@ class TitleSerializer(serializers.ModelSerializer):
         return value
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserCreationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
+        email = serializers.EmailField(required=True)
+        username = serializers.CharField(required=True)
+        
         fields = (
             "username",
             "email",
@@ -80,13 +83,32 @@ class UserSerializer(serializers.ModelSerializer):
             "role",
         )
 
-    def validate(self, data):
-        if data.get("username") == "me":
-            raise serializers.ValidationError("Username указан неверно!")
-        return data
+    def validate_username(self, value):
+        """Проверяем, что нельзя создать пользователя с username = "me"
+        и, что нельзя создать с одинаковым username."""
+        username = value.lower()
+        if username == 'me':
+            raise serializers.ValidationError(
+                'Пользователя с username="me" создавать нельзя.'
+            )
+        if User.objects.filter(username=username).exists():
+            raise serializers.ValidationError(
+                f'Пользователь с таким username — {username} — уже существует.'
+            )
+        return value
+
+    def validate_email(self, value):
+        """Проверяем, что нельзя создать пользователя с одинаковым email."""
+        email = value.lower()
+        if User.objects.filter(email=email).exists():
+            raise serializers.ValidationError(
+                f'Пользователь с таким Email — {email} — уже существует.'
+            )
+        return value
 
 
-class AuthSignUpSerializer(serializers.ModelSerializer):
+
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ("email", "username")
