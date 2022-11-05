@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.core.validators import MinValueValidator, MaxValueValidator
 
 from .validators import validate_year
 
@@ -137,14 +137,14 @@ class Review(models.Model):
         related_name="reviews",
     )
     score = models.PositiveSmallIntegerField(
-        validators = [
+        validators=[
             MinValueValidator(1, "минимальная оценка - 1"),
-            MaxValueValidator(10, "Максимальная оценка - 10")
+            MaxValueValidator(10, "Максимальная оценка - 10"),
         ],
-        verbose_name="Оценка"
+        verbose_name="Оценка",
     )
     pub_date = models.DateTimeField(
-        "Дата публикации", 
+        "Дата публикации",
         auto_now_add=True,
         db_index=True,
     )
@@ -160,7 +160,7 @@ class Review(models.Model):
         ]
 
     def __str__(self):
-        return f'{self.title}, {self.score}, {self.author}'
+        return f"{self.title}, {self.score}, {self.author}"
 
 
 class Comment(models.Model):
@@ -176,7 +176,7 @@ class Comment(models.Model):
         related_name="comments",
     )
     pub_date = models.DateTimeField(
-        "Дата публикации", 
+        "Дата публикации",
         auto_now_add=True,
         db_index=True,
     )
@@ -187,4 +187,4 @@ class Comment(models.Model):
         verbose_name_plural = "Комментарии"
 
     def __str__(self):
-        return f'{self.author}, {self.pub_date}: {self.text}'
+        return f"{self.author}, {self.pub_date}: {self.text}"

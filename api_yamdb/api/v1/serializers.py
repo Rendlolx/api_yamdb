@@ -1,8 +1,5 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
-
-from .utils import CurrentTitleDefault
-
 from reviews.models import (
     Category,
     Comment,
@@ -11,6 +8,8 @@ from reviews.models import (
     Title,
     User,
 )  # isort:skip
+
+from .utils import CurrentTitleDefault
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -55,7 +54,7 @@ class UserCreationSerializer(serializers.ModelSerializer):
         model = User
         email = serializers.EmailField(required=True)
         username = serializers.CharField(required=True)
-        
+
         fields = (
             "username",
             "email",
@@ -69,13 +68,13 @@ class UserCreationSerializer(serializers.ModelSerializer):
         """Проверяем, что нельзя создать пользователя с username = "me"
         и, что нельзя создать с одинаковым username."""
         username = value.lower()
-        if username == 'me':
+        if username == "me":
             raise serializers.ValidationError(
                 'Пользователя с username="me" создавать нельзя.'
             )
         if User.objects.filter(username=username).exists():
             raise serializers.ValidationError(
-                f'Пользователь с таким username — {username} — уже существует.'
+                f"Пользователь с таким username — {username} — уже существует."
             )
         return value
 
@@ -84,7 +83,7 @@ class UserCreationSerializer(serializers.ModelSerializer):
         email = value.lower()
         if User.objects.filter(email=email).exists():
             raise serializers.ValidationError(
-                f'Пользователь с таким Email — {email} — уже существует.'
+                f"Пользователь с таким Email — {email} — уже существует."
             )
         return value
 
@@ -104,18 +103,16 @@ class ReviewSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(
         default=serializers.CurrentUserDefault(),
         read_only=True,
-        slug_field='username'
+        slug_field="username",
     )
-    title = serializers.HiddenField(
-        default=CurrentTitleDefault())
+    title = serializers.HiddenField(default=CurrentTitleDefault())
 
     class Meta:
         model = Review
         fields = ["id", "title", "author", "text", "score", "pub_date"]
         validators = [
             UniqueTogetherValidator(
-                queryset=Review.objects.all(),
-                fields=('author', 'title')
+                queryset=Review.objects.all(), fields=("author", "title")
             )
         ]
 
@@ -127,4 +124,9 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ["id", "text", "author", "pub_date",]
+        fields = [
+            "id",
+            "text",
+            "author",
+            "pub_date",
+        ]
