@@ -1,8 +1,7 @@
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-<<<<<<< HEAD:api_yamdb/api/views.py
-from rest_framework import filters, mixins, status, viewsets
+from rest_framework import filters, mixins, status, viewsets, permissions, serializers
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
@@ -11,28 +10,15 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 
 from api_yamdb.settings import EMAIL_ADMIN
-=======
-from rest_framework import (
-    filters,
-    mixins,
-    permissions,
-    serializers,
-    status,
-    viewsets,
-)
-from rest_framework.decorators import action, api_view
-from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
-from reviews.models import (
-    Category,
-    Comment,
-    Genre,
-    Review,
-    Title,
-    User,
-)  # isort:skip
->>>>>>> c65aaf03fd3b222a3078cc6b0c93c85dc5ea03f4:api_yamdb/api/v1/views.py
 
+from reviews.models import (
+    Category, 
+    Genre, 
+    Title, 
+    User, 
+    Review, 
+    Comment
+)
 
 from .filters import TitleFilter  # isort:skip
 from .permissions import (  # isort:skip

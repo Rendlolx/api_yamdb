@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 from .validators import validate_year
 
@@ -135,8 +136,18 @@ class Review(models.Model):
         on_delete=models.CASCADE,
         related_name="reviews",
     )
-    score = models.PositiveSmallIntegerField()
-    pub_date = models.DateTimeField("Дата публикации", auto_now_add=True)
+    score = models.PositiveSmallIntegerField(
+        validators = [
+            MinValueValidator(1, "минимальная оценка - 1"),
+            MaxValueValidator(10, "Максимальная оценка - 10")
+        ],
+        verbose_name="Оценка"
+    )
+    pub_date = models.DateTimeField(
+        "Дата публикации", 
+        auto_now_add=True,
+        db_index=True,
+    )
 
     class Meta:
         ordering = ["-pub_date"]
@@ -149,7 +160,7 @@ class Review(models.Model):
         ]
 
     def __str__(self):
-        return self.text[:10]
+        return f'{self.title}, {self.score}, {self.author}'
 
 
 class Comment(models.Model):
@@ -164,7 +175,11 @@ class Comment(models.Model):
         on_delete=models.CASCADE,
         related_name="comments",
     )
-    pub_date = models.DateTimeField("Дата публикации", auto_now_add=True)
+    pub_date = models.DateTimeField(
+        "Дата публикации", 
+        auto_now_add=True,
+        db_index=True,
+    )
 
     class Meta:
         ordering = ["-pub_date"]
@@ -172,4 +187,4 @@ class Comment(models.Model):
         verbose_name_plural = "Комментарии"
 
     def __str__(self):
-        return self.text[:10]
+        return f'{self.author}, {self.pub_date}: {self.text}'

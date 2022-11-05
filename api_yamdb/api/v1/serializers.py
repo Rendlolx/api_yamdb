@@ -1,4 +1,7 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
+
+from .utils import CurrentTitleDefault
 
 from reviews.models import (
     Category,
@@ -98,22 +101,30 @@ class AuthTokenSerializer(serializers.Serializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    title = TitleReadSerializer(many=False, read_only=True)
     author = serializers.SlugRelatedField(
-        read_only=True, slug_field="username"
+        default=serializers.CurrentUserDefault(),
+        read_only=True,
+        slug_field='username'
     )
+    title = serializers.HiddenField(
+        default=CurrentTitleDefault())
 
     class Meta:
         model = Review
         fields = ["id", "title", "author", "text", "score", "pub_date"]
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Review.objects.all(),
+                fields=('author', 'title')
+            )
+        ]
 
 
 class CommentSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(
         read_only=True, slug_field="username"
     )
-    review = ReviewSerializer(many=False, read_only=True)
 
     class Meta:
         model = Comment
-        fields = ["id", "text", "author", "pub_date", "review"]
+        fields = ["id", "text", "author", "pub_date",]
