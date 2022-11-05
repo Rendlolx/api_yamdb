@@ -19,8 +19,7 @@ class CurrentTitleDefault:
 
 
 def generate_and_send_confirmation_code_to_email(username):
-    #user = get_object_or_404(User, username=username)
-    user, _ = User.objects.get_or_create(email=email, username=username)
+    user = get_object_or_404(User, username=username)
     confirmation_code = default_token_generator.make_token(user)
     send_mail(
         'Код подтвержения для завершения регистрации',
