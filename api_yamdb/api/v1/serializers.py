@@ -1,9 +1,13 @@
-import datetime as dt
-
-from django.db.models import Avg
 from rest_framework import serializers
 
-from reviews.models import Category, Genre, Title, User  # isort:skip
+from reviews.models import (
+    Category,
+    Comment,
+    Genre,
+    Review,
+    Title,
+    User,
+)  # isort:skip
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -20,52 +24,27 @@ class GenreSerializer(serializers.ModelSerializer):
         lookup_field = "slug"
 
 
-class GenreSlug(serializers.SlugRelatedField):
-    def to_representation(self, value):
-        serializer = GenreSerializer(value)
-        return serializer.data
+class TitleReadSerializer(serializers.ModelSerializer):
+    rating = serializers.IntegerField(read_only=True)
+    genre = GenreSerializer(many=True, read_only=True)
+    category = CategorySerializer(read_only=True)
+
+    class Meta:
+        fields = "__all__"
+        model = Title
 
 
-class CategorySlug(serializers.SlugRelatedField):
-    def to_representation(self, value):
-        serializer = CategorySerializer(value)
-        return serializer.data
-
-
-class TitleSerializer(serializers.ModelSerializer):
-    rating = serializers.SerializerMethodField()
-    genre = GenreSlug(
-        many=True,
-        slug_field="slug",
-        queryset=Genre.objects.all(),
+class TitleWriteSerializer(serializers.ModelSerializer):
+    genre = serializers.SlugRelatedField(
+        slug_field="slug", many=True, queryset=Genre.objects.all()
     )
-    category = CategorySlug(
-        slug_field="slug",
-        queryset=Category.objects.all(),
+    category = serializers.SlugRelatedField(
+        slug_field="slug", queryset=Category.objects.all()
     )
 
     class Meta:
-        fields = (
-            "id",
-            "name",
-            "year",
-            "rating",
-            "description",
-            "genre",
-            "category",
-        )
+        fields = "__all__"
         model = Title
-
-    def get_rating(self, obj):
-        return obj.reviews.aggregate(Avg("score")).get("score__avg")
-
-    def validate_year(self, value):
-        year = dt.date.today().year
-        if value >= year:
-            raise serializers.ValidationError(
-                "Год создания не может быть из будущего!"
-            )
-        return value
 
 
 class UserCreationSerializer(serializers.ModelSerializer):
@@ -107,7 +86,6 @@ class UserCreationSerializer(serializers.ModelSerializer):
         return value
 
 
-
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -117,3 +95,25 @@ class UserSerializer(serializers.ModelSerializer):
 class AuthTokenSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=150)
     confirmation_code = serializers.CharField(max_length=50)
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    title = TitleReadSerializer(many=False, read_only=True)
+    author = serializers.SlugRelatedField(
+        read_only=True, slug_field="username"
+    )
+
+    class Meta:
+        model = Review
+        fields = ["id", "title", "author", "text", "score", "pub_date"]
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    author = serializers.SlugRelatedField(
+        read_only=True, slug_field="username"
+    )
+    review = ReviewSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = Comment
+        fields = ["id", "text", "author", "pub_date", "review"]

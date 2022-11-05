@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from .validators import validate_year
+
 
 class User(AbstractUser):
     ADMIN = "admin"
@@ -88,7 +90,9 @@ class Category(models.Model):
 
 class Title(models.Model):
     name = models.CharField(max_length=100)
-    year = models.IntegerField()
+    year = models.SmallIntegerField(
+        verbose_name="Год", validators=[validate_year], db_index=True
+    )
     description = models.TextField(blank=True)
     genre = models.ManyToManyField(Genre, through="GenreTitle")
     category = models.ForeignKey(
@@ -108,8 +112,12 @@ class Title(models.Model):
 
 
 class GenreTitle(models.Model):
-    genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
-    title = models.ForeignKey(Title, on_delete=models.CASCADE)
+    genre = models.ForeignKey(
+        Genre, on_delete=models.SET_NULL, blank=True, null=True
+    )
+    title = models.ForeignKey(
+        Title, on_delete=models.SET_NULL, blank=True, null=True
+    )
 
     def __str__(self):
         return f"{self.title} {self.genre}"
@@ -136,8 +144,7 @@ class Review(models.Model):
         verbose_name_plural = "Отзывы"
         constraints = [
             models.UniqueConstraint(
-                fields=['author', 'title'],
-                name='unique_author_review'
+                fields=["author", "title"], name="unique_author_review"
             )
         ]
 
