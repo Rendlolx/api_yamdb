@@ -1,7 +1,8 @@
-from api_yamdb.settings import EMAIL_ADMIN
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
+
+from api_yamdb.settings import EMAIL_ADMIN
 
 from reviews.models import Title, User  # isort:skip
 
