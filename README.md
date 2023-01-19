@@ -14,7 +14,7 @@
 ## Установка:
 1. Клонируйте репозиторий, перейдите в него:
 ```sh
-git clone git@github.com:Rendlolx/api_yamdb.git
+git clone git@github.com:Gidwin/api_yamdb.git
 cd api_yamdb
 ```
 2. Создайте и активируйте виртуальное окружение:
